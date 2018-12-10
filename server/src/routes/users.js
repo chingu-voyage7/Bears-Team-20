@@ -2,6 +2,8 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+import validateRegisterInput from '../validation/register';
+
 const keys = require('../configuration/keys');
 const router = express.Router();
 
@@ -27,6 +29,11 @@ router.get('/', (req, res) => {
 router.post('/register', (req, res) => {
   // Validate input first
   // Check all required fields are present
+  console.log(validateRegisterInput);
+  const { errors, isValid } = validateRegisterInput(req.body);
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
   User.find({ email: req.body.email })
     .then((result) => {
       if (result.length === 0) {
@@ -44,11 +51,14 @@ router.post('/register', (req, res) => {
               .catch((err) => {
                 console.log(err);
                 res.json(err);
-                // res.json({ msg: 'Error in creating user'});
               });
           })
         })
-      };
+      }
+      else {
+        errors.email = 'There is already an account associated with this email';
+        return res.status(400).json(errors);
+      }
     });
 });
 
