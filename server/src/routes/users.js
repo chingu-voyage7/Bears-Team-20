@@ -1,5 +1,6 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 const keys = require('../configuration/keys');
 const router = express.Router();
@@ -52,7 +53,36 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-  res.json({ msg: 'login user' });
+  const errors = {};
+  const { password, email } = req.body;
+  User.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        errors.email = 'User not found';
+        return res.status(404).json(errors);
+      }
+      bcrypt.compare(password, user.password)
+        .then((isMatch) => {
+          if (isMatch) {
+            const payload = { id: user.id, name: user.name };
+            jwt.sign(
+              payload,
+              keys.secretOrKey,
+              (err, token) => {
+                res.json({
+                  success: true,
+                  token: token,
+                  id: user.id
+                });
+              }
+            );
+          }
+          else {
+            errors.password = 'Password incorrect';
+            return res.status(400).json(errors);
+          }
+        })
+    });
 });
 
 export default router;
