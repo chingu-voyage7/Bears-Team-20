@@ -1,6 +1,5 @@
 import express from 'express';
 import morgan from 'morgan';
-import bodyParser from 'body-parser';
 import passport from 'passport';
 
 import mongoose from './configuration/mongoose';
@@ -10,8 +9,8 @@ import users from './routes/users';
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 // Passport middleware
 app.use(passport.initialize());

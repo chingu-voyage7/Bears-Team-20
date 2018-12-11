@@ -1,10 +1,12 @@
 import Validator from 'validator';
+import isEmpty from './isEmpty';
+
 function validateRegisterInput (data) {
   const errors = {};
 
-  data.name = data.name.length !== 0 ? data.name : '';
-  data.email = data.email.length !== 0 ? data.email : '';
-  data.password = data.password.length !== 0 ? data.password : '';
+  data.name = !isEmpty(data.name) ? data.name : '';
+  data.email = !isEmpty(data.email) ? data.email : '';
+  data.password = !isEmpty(data.password) ? data.password : '';
 
   if (!Validator.isLength(data.name, { min: 2, max: 30 })) {
     errors.name = 'Name must be between 2 and 30 characters';
@@ -33,7 +35,7 @@ function validateRegisterInput (data) {
 
   return {
     errors,
-    isValid: Object.keys(errors).length === 0
+    isValid: isEmpty(errors)
   };
 }
 export default validateRegisterInput;

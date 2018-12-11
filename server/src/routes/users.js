@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 import validateRegisterInput from '../validation/register';
+import { validateLoginInput } from '../validation/login';
 
 const keys = require('../configuration/keys');
 const router = express.Router();
@@ -63,8 +64,14 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-  const errors = {};
+  const { errors, isValid } = validateLoginInput(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   const { password, email } = req.body;
+  
   User.findOne({ email })
     .then((user) => {
       if (!user) {
