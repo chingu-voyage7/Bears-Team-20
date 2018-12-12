@@ -3,17 +3,12 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 const mongoose = require('mongoose');
 
 const User = mongoose.model('users');
-const keys = require('../configuration/keys');
-
-const opts = {};
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-opts.secretOrKey = keys.secretOrKey;
 
 module.exports = (passport) => {
   passport.use(
     new JwtStrategy({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: keys.secretOrKey,
+      secretOrKey: process.env.SECRET_KEY,
     }, (jwtPayload, done) => {
       User.findById(jwtPayload.id)
         .then((user) => {
@@ -26,3 +21,4 @@ module.exports = (passport) => {
     })
   );
 };
+

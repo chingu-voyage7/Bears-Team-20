@@ -2,8 +2,8 @@ import express from 'express';
 import morgan from 'morgan';
 import passport from 'passport';
 
-import mongoose from './configuration/mongoose';
-
+// require('dotenv').config();
+import startDB from './configuration/mongoose';
 import users from './routes/users';
 
 const app = express();
@@ -11,6 +11,8 @@ const port = process.env.PORT || 3000;
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+startDB();
 
 // Passport middleware
 app.use(passport.initialize());
@@ -28,3 +30,4 @@ app.listen(port, () => {
 });
 
 export default app;
+

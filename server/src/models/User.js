@@ -47,7 +47,14 @@ const UserSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  activateAccountLink: {
+    type: String,
+  },
+  activateAccountLinkExpiration: {
+    type: String,
+  },
+
 });
 
 const User = mongoose.model('users', UserSchema);
