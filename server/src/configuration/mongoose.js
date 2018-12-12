@@ -5,6 +5,7 @@ mongoose.Promise = global.Promise;
 async function startDB() {
   try {
     await mongoose.connect(
+      // process.env.MONGODB_URI || MONGODB_URI,
       process.env.MONGODB_URI,
       { useNewUrlParser: true },
     );
@@ -14,6 +15,4 @@ async function startDB() {
   }
 }
 
-startDB();
-
-export default mongoose;
+export default startDB;
